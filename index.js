@@ -10,13 +10,15 @@ var tokens = []
 
 var server = http.createServer(function (req, res) {
   var url = req.url.split('?')[0]
-  console.log(url)
   
-  when(req.method === 'POST' && url === '/publish')
-    .run(handlePublish, [req, res])
+  // when(req.method === 'POST' && url === '/publish')
+  //   .run(handlePublish, [req, res])
 
   when(req.method === 'POST' && url === '/auth')
     .run(handleAuth, [req, res])
+    .or(function () { res.end(JSON.stringify({ 
+      name: 'FeedMe'}))
+    })
 })
 
 io = require('socket.io')(server)
@@ -26,6 +28,10 @@ io.on('connection', function (socket) {
       socket.join('palmetto')
     }
   })
+  socket.on('publish', function (event) {
+    console.log('published')
+    io.to('palmetto').emit('event', event)
+  })
 })
 
 server.listen(process.env.PORT || 3000)
@@ -34,6 +40,11 @@ function when (test) {
   return {
     run: function (fn, args) {
       if (test) fn.apply(null, args)
+      return {
+        or: function (fn) {
+          if (!test) fn()
+        }
+      }
     }
   }
 }

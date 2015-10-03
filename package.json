@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "body": "^5.1.0",
+    "health-route": "^3.0.2",
     "send-data": "^7.0.0",
     "socket.io": "^1.3.7",
     "uuid": "^2.0.1",
