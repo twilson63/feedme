@@ -29,7 +29,8 @@ io.on('connection', function (socket) {
     }
   })
   socket.on('publish', function (event) {
-    console.log('published')
+    //console.log('published')
+    console.log(event)
     io.to('palmetto').emit('event', event)
   })
 })
